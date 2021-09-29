@@ -41,11 +41,11 @@ jobs:
         run: |
           mkdir aarch64-linux-musl
           cd aarch64-linux-musl
-          wget -O "aarch64-linux-musl.tar.xz" "https://github.com/${{ matrix.musl-cross-make-repo }}/releases/latest/download/aarch64-linux-musl.tar.xz"
+          wget -O "aarch64-linux-musl.tar.xz" "https://github.com/${{ matrix.musl-cross-make-repo }}/releases/latest/download/aarch64-linux-musl.tar.xz" > /dev/null
       - name: unzip aarch64-linux-musl and append path
         run: |
           cd aarch64-linux-musl
-          tar Jxfv aarch64-linux-musl.tar.xz
+          tar Jxfv aarch64-linux-musl.tar.xz > /dev/null
           echo "$(pwd)/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
         with:
