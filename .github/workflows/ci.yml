@@ -107,14 +107,18 @@ jobs:
           sha256sum "php-gd"  "php-gd-modified" "zip-php-gd.zip" "zip-php-gd-modified.zip" "php.ini" > checksums.sha256
           cat checksums.sha256
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v0.1.13
         with:
           tag_name: ${{ github.event.inputs.artifactname }}
-          release_name: Release ${{ github.event.inputs.artifactname }}
+          name: Release ${{ github.event.inputs.artifactname }}
           draft: true
+          files: |
+            php-gd
+            php-gd-modified
+            zip-php-gd.zip
+            zip-php-gd-modified.zip
+            php.ini
+            checksums.sha256
           body: "The php version for this release is ${{ github.event.inputs.artifactname }}.
 The download is available from the Assets dropdown.
 
@@ -125,69 +129,3 @@ This binary does not support jit.
 
 This binary is for ARMv8 (aarch64, 64bit).
 It does not work on arm (32bit)."
-
-      - name: Upload Release Assset(php-gd)
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./php-gd
-          asset_name: php-gd
-          asset_content_type: application/octet-stream
-
-      - name: Upload Release Asset(php-gd-modified)
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./php-gd-modified
-          asset_name: php-gd-modified
-          asset_content_type: application/octet-stream
-
-      - name: Upload Release Asset(zip-php-gd.zip)
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./zip-php-gd.zip
-          asset_name: zip-php-gd.zip
-          asset_content_type: application/zip
-
-      - name: Upload Release Asset(zip-php-gd-modified.zip)
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./zip-php-gd-modified.zip
-          asset_name: zip-php-gd-modified.zip
-          asset_content_type: application/zip
-
-      - name: Upload Release Asset(php.ini)
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./php.ini
-          asset_name: php.ini
-          asset_content_type: text/plain
-
-      - name: Upload Release Asset(checksums.sha256)
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./checksums.sha256
-          asset_name: checksums.sha256
-          asset_content_type: text/plain
