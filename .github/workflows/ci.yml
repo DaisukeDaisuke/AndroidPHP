@@ -4,7 +4,7 @@ on:
       tagname:
         description: 'tagname'
         required: true
-        default: '8.0.11'
+        default: '8.0.11-pm3'
       commithash:
         description: 'commit hash'
         required: true
@@ -72,11 +72,11 @@ jobs:
         with:
           name: "php-${{ github.event.inputs.artifactname }}${{ matrix.name }}"
           path: "./php${{ matrix.name }}"
-      - name: Download a Build Artifact
+      - uses: actions/upload-artifact@v1
         if: ${{ matrix.upload-php-ini == 'yes'}}
-        uses: actions/download-artifact@v2
         with:
-          name: php.ini
+          name: "php-${{ github.event.inputs.artifactname }}${{ matrix.name }}"
+          path: "./php${{ matrix.name }}"
   commit-php:
     name: release
     needs: build-php
@@ -102,6 +102,8 @@ jobs:
         run: |
           zip -9 zip-php-gd php-gd
           zip -9 zip-php-gd-modified php-gd-modified
+      - name: debug tree
+        run: tree
       - name: create checksums.sha256
         run: |
           sha256sum "php-gd"  "php-gd-modified" "zip-php-gd.zip" "zip-php-gd-modified.zip" "php.ini" > checksums.sha256
