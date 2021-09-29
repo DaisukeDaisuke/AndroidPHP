@@ -75,8 +75,8 @@ jobs:
       - uses: actions/upload-artifact@v1
         if: ${{ matrix.upload-php-ini == 'yes'}}
         with:
-          name: "php-${{ github.event.inputs.artifactname }}${{ matrix.name }}"
-          path: "./php${{ matrix.name }}"
+          name: php.ini
+          path: "./php.ini"
   commit-php:
     name: release
     needs: build-php
