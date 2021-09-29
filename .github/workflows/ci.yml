@@ -105,8 +105,6 @@ jobs:
         run: |
           zip -9 zip-php-gd php-gd
           zip -9 zip-php-gd-modified php-gd-modified
-      - name: debug tree
-        run: tree
       - name: create checksums.sha256
         run: |
           sha256sum "php-gd"  "php-gd-modified" "zip-php-gd.zip" "zip-php-gd-modified.zip" "php.ini" > checksums.sha256
@@ -125,12 +123,13 @@ jobs:
             php.ini
             checksums.sha256
           body: "The php version for this release is ${{ github.event.inputs.tagname }}.
+
 The download is available from the Assets dropdown.
 
 #### Notes
 
-php-pm4-gd(.zip) is for pmmp api4.
 This binary does not support jit.
 
 This binary is for ARMv8 (aarch64, 64bit).
+
 It does not work on arm (32bit)."
