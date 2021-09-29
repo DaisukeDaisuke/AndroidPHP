@@ -72,6 +72,9 @@ jobs:
         with:
           name: "php-${{ github.event.inputs.artifactname }}${{ matrix.name }}"
           path: "./php${{ matrix.name }}"
+      - name: copy php.ini
+        if: ${{ matrix.upload-php-ini == 'yes'}}
+        run: cp ./php-build-scripts/bin/php7/bin/php.ini ./php.ini
       - uses: actions/upload-artifact@v1
         if: ${{ matrix.upload-php-ini == 'yes'}}
         with:
