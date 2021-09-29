@@ -70,7 +70,7 @@ jobs:
         run: cp ./php-build-scripts/bin/php7/bin/php "php${{ matrix.name }}"
       - uses: actions/upload-artifact@v1
         with:
-          name: "php-${{ github.event.inputs.artifactname }}${{ matrix.name }}"
+          name: "php${{ matrix.name }}"
           path: "./php${{ matrix.name }}"
       - name: copy php.ini
         if: ${{ matrix.upload-php-ini == 'yes'}}
@@ -89,12 +89,12 @@ jobs:
       - name: Download a Build Artifact(php-gd)
         uses: actions/download-artifact@v2
         with:
-          name: php-${{ github.event.inputs.artifactname }}-gd
+          name: php-gd
 
       - name: Download a Build Artifact(php-gd-modified)
         uses: actions/download-artifact@v2
         with:
-          name: php-${{ github.event.inputs.artifactname }}-gd-modified
+          name: php-gd-modified
 
       - name: Download a Build Artifact(php.ini)
         uses: actions/download-artifact@v2
@@ -114,8 +114,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.13
         with:
-          tag_name: ${{ github.event.inputs.artifactname }}
-          name: Release ${{ github.event.inputs.artifactname }}
+          tag_name: ${{ github.event.inputs.tagname }}
+          name: Release ${{ github.event.inputs.tagname }}
           draft: true
           files: |
             php-gd
@@ -124,7 +124,7 @@ jobs:
             zip-php-gd-modified.zip
             php.ini
             checksums.sha256
-          body: "The php version for this release is ${{ github.event.inputs.artifactname }}.
+          body: "The php version for this release is ${{ github.event.inputs.tagname }}.
 The download is available from the Assets dropdown.
 
 #### Notes
