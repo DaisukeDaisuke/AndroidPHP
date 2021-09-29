@@ -1,0 +1,193 @@
+on:
+  workflow_dispatch:
+    inputs:
+      tagname:
+        description: 'tagname'
+        required: true
+        default: '8.0.11'
+      commithash:
+        description: 'commit hash'
+        required: false
+        default: 'none'
+      createRelease:
+        description: 'If "yes", create the release.'
+        required: false
+        default: 'yes'
+
+name: Release Binaries
+
+jobs:
+  build-php:
+    name: Building cross compiler for android-aarch64
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+          include:
+            - option: "-g"
+              name: "-gd"
+              branch: "stable"
+              upload-php-ini: "yes"
+              musl-cross-make-repo: "ScerIO/musl-cross-make"
+            - option: "-g"
+              name: "-gd-modified"
+              branch: "stable"
+              upload-php-ini: "no"
+              musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
+
+    steps:
+      - name: fetch aarch64-linux-musl from github release
+        run: |
+          mkdir aarch64-linux-musl
+          cd aarch64-linux-musl
+          wget -O "aarch64-linux-musl.tar.xz" "https://github.com/${{ matrix.musl-cross-make-repo }}/releases/latest/download/aarch64-linux-musl.tar.xz"
+      - name: unzip aarch64-linux-musl and append path
+        run: |
+          cd aarch64-linux-musl
+          tar Jxfv aarch64-linux-musl.tar.xz
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+      - uses: actions/checkout@v2
+        with:
+         repository: pmmp/php-build-scripts
+         path: php-build-scripts
+         fetch-depth: 0
+         ref: ${{ matrix.branch }}
+      - name: Checkout php-build-scripts commit
+        if: ${{ github.event.inputs.commithash != 'none' }}
+        run: |
+          cd php-build-scripts
+          git checkout "${{ github.event.inputs.commithash }}"
+      - name: install module
+        run: |
+          sudo apt update > /dev/null
+          sudo apt install -y p7zip re2c libtool libtool-bin zlib1g-dev libcurl4-openssl-dev libxml2-dev libyaml-dev libgmp-dev libzip-dev libssl-dev > /dev/null
+      - name: making aarch64 php
+        run: |
+          cd php-build-scripts
+          ./compile.sh -t android-aarch64 -x -j2 -f ${{ matrix.option }}
+      - name: copy php
+        run: cp ./php-build-scripts/bin/php7/bin/php "php${{ matrix.name }}"
+      - uses: actions/upload-artifact@v1
+        with:
+          name: "php-${{ github.event.inputs.artifactname }}${{ matrix.name }}"
+          path: "./php${{ matrix.name }}"
+      - name: Download a Build Artifact
+        if: ${{ matrix.upload-php-ini == 'yes'}}
+        uses: actions/download-artifact@v2
+        with:
+          name: php.ini
+  commit-php:
+    name: release
+    needs: build-php
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.createRelease == 'yes'}}
+    steps:
+      - name: Download a Build Artifact(php-gd)
+        uses: actions/download-artifact@v2
+        with:
+          name: php-${{ github.event.inputs.artifactname }}-gd
+
+      - name: Download a Build Artifact(php-gd-modified)
+        uses: actions/download-artifact@v2
+        with:
+          name: php-${{ github.event.inputs.artifactname }}-gd-modified
+
+      - name: Download a Build Artifact(php.ini)
+        uses: actions/download-artifact@v2
+        with:
+          name: php.ini
+
+      - name: file compressions
+        run: |
+          zip -9 zip-php-gd php-gd
+          zip -9 zip-php-gd-modified php-gd-modified
+      - name: create checksums.sha256
+        run: |
+          sha256sum "php-gd"  "php-gd-modified" "zip-php-gd.zip" "zip-php-gd-modified.zip" "php.ini" > checksums.sha256
+          cat checksums.sha256
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.artifactname }}
+          release_name: Release ${{ github.event.inputs.artifactname }}
+          draft: true
+          body: "The php version for this release is ${{ github.event.inputs.artifactname }}.
+The download is available from the Assets dropdown.
+
+#### Notes
+
+php-pm4-gd(.zip) is for pmmp api4.
+This binary does not support jit.
+
+This binary is for ARMv8 (aarch64, 64bit).
+It does not work on arm (32bit)."
+
+      - name: Upload Release Assset(php-gd)
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./php-gd
+          asset_name: php-gd
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset(php-gd-modified)
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./php-gd-modified
+          asset_name: php-gd-modified
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset(zip-php-gd.zip)
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./zip-php-gd.zip
+          asset_name: zip-php-gd.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset(zip-php-gd-modified.zip)
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./zip-php-gd-modified.zip
+          asset_name: zip-php-gd-modified.zip
+          asset_content_type: application/zip
+
+      - name: Upload Release Asset(php.ini)
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./php.ini
+          asset_name: php.ini
+          asset_content_type: text/plain
+
+      - name: Upload Release Asset(checksums.sha256)
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./checksums.sha256
+          asset_name: checksums.sha256
+          asset_content_type: text/plain
