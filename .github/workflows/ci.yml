@@ -114,8 +114,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.13
         with:
-          tag_name: ${{ github.event.inputs.tagname }}
-          name: Release ${{ github.event.inputs.tagname }}
+          tag_name: pm3-${{ github.event.inputs.tagname }}
+          name: Release pm3-${{ github.event.inputs.tagname }}
           draft: true
           files: |
             php-gd
