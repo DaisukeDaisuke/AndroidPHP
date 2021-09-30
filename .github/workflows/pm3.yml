@@ -60,8 +60,8 @@ jobs:
           git checkout "${{ github.event.inputs.commithash }}"
       - name: install module
         run: |
-          sudo apt update > /dev/null
-          sudo apt install -y p7zip re2c libtool libtool-bin zlib1g-dev libcurl4-openssl-dev libxml2-dev libyaml-dev libgmp-dev libzip-dev libssl-dev > /dev/null
+          sudo apt update &> /dev/null
+          sudo apt install -y p7zip re2c libtool libtool-bin zlib1g-dev libcurl4-openssl-dev libxml2-dev libyaml-dev libgmp-dev libzip-dev libssl-dev &> /dev/null
       - name: making aarch64 php
         run: |
           cd php-build-scripts
