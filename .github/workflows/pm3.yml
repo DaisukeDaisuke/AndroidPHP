@@ -51,7 +51,6 @@ jobs:
         with:
          repository: pmmp/php-build-scripts
          path: php-build-scripts
-         fetch-depth: 0
          ref: ${{ matrix.branch }}
       - name: Checkout php-build-scripts commit
         if: ${{ github.event.inputs.commithash != 'none' }}
