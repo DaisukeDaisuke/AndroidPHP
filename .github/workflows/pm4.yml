@@ -114,7 +114,7 @@ jobs:
       - name: file compressions
         run: |
           zip -9 zip-php-pm4 php-pm4
-          zip -9 zip-php-pm4-gd php-pm4
+          zip -9 zip-php-pm4-gd php-pm4-gd
           zip -9 zip-php-pm4-gd-no-modification php-pm4-gd-no-modification
       - name: create checksums.sha256
         run: |

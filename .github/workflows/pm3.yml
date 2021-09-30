@@ -100,7 +100,7 @@ jobs:
         with:
           name: php-gd
 
-      - name: Download a Build Artifact(php-gd-modified)
+      - name: Download a Build Artifact(php-gd-no-modification)
         uses: actions/download-artifact@v2
         with:
           name: php-gd-no-modification
@@ -112,9 +112,9 @@ jobs:
 
       - name: file compressions
         run: |
-          zip -9 zip-php-gd php
+          zip -9 zip-php php
           zip -9 zip-php-gd php-gd
-          zip -9 zip-php-gd-modified php-gd-modified
+          zip -9 zip-php-gd-no-modification php-gd-no-modification
       - name: create checksums.sha256
         run: |
           sha256sum "php" "php-gd" "php-gd-no-modification" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "php.ini" > checksums.sha256
