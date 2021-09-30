@@ -67,8 +67,13 @@ env LESMI_RESOLV_CONF_DIR=/storage/emulated/0/PocketMine/config/resolv.conf SSL_
 ```
 The LESMI_RESOLV_CONF_DIR environment variable is created by the modified musl (gcc).
 
-# Other information
-A url that links directly to the latest binary.
+<hr />
+
+#### Other information
+<details>
+<summary>A url that links directly to the latest binary.</summary>
+<br>
+
 ```
 pm3
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php
@@ -88,3 +93,5 @@ https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4.zi
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd.zip
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd-no-modification.zip
 ```
+</details>
+
