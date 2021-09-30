@@ -66,3 +66,25 @@ cd /storage/emulated/0/PocketMine/
 env LESMI_RESOLV_CONF_DIR=/storage/emulated/0/PocketMine/config/resolv.conf SSL_CERT_FILE=/storage/emulated/0/PocketMine/config/cacert.pem /data/data/jackpal.androidterm/app_HOME/php -c /storage/emulated/0/PocketMine/config/php.ini /storage/emulated/0/PocketMine/PocketMine-MP.phar
 ```
 The LESMI_RESOLV_CONF_DIR environment variable is created by the modified musl (gcc).
+
+# Other information
+A url that links directly to the latest binary.
+```
+pm3
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-gd
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-gd-no-modification
+pm3-zip
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php.zip
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/zip-php-gd.zip
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/zip-php-gd-no-modification.zip
+
+pm4
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd-no-modification
+pm4-zip
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4.zip
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd.zip
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd-no-modification.zip
+```
