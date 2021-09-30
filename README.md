@@ -1,7 +1,4 @@
 # AndroidPHP
-### old Binaries  
-https://github.com/DaisukeDaisuke/AndroidPHP_old
-<hr />
 
 select language
 -  english
