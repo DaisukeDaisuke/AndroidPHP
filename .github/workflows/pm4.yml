@@ -114,7 +114,6 @@ jobs:
         with:
           tag_name: pm4-${{ github.event.inputs.tagname }}
           name: Release pm4-${{ github.event.inputs.tagname }}
-          prerelease: true
           files: |
             php-gd
             php-gd-modified
