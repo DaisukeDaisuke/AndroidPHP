@@ -1,0 +1,134 @@
+on:
+  workflow_dispatch:
+    inputs:
+      tagname:
+        description: 'tagname'
+        required: true
+        default: '8.0.11'
+      commithash:
+        description: 'commit hash'
+        required: true
+        default: 'none'
+      createRelease:
+        description: 'If "yes", create the release.'
+        required: true
+        default: 'yes'
+
+name: Release Binaries pmmp 3
+
+jobs:
+  build-php:
+    name: Building cross compiler for android-aarch64
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+          include:
+            - option: "-g"
+              name: "-gd"
+              branch: "stable"
+              upload-php-ini: "yes"
+              musl-cross-make-repo: "ScerIO/musl-cross-make"
+            - option: "-g"
+              name: "-gd-modified"
+              branch: "stable"
+              upload-php-ini: "no"
+              musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
+
+    steps:
+      - name: fetch aarch64-linux-musl from github release
+        run: |
+          mkdir aarch64-linux-musl
+          cd aarch64-linux-musl
+          wget -q -O "aarch64-linux-musl.tar.xz" "https://github.com/${{ matrix.musl-cross-make-repo }}/releases/latest/download/aarch64-linux-musl.tar.xz"
+      - name: unzip aarch64-linux-musl and append path
+        run: |
+          cd aarch64-linux-musl
+          tar Jxfv aarch64-linux-musl.tar.xz > /dev/null
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+      - uses: actions/checkout@v2
+        with:
+         repository: pmmp/php-build-scripts
+         path: php-build-scripts
+         fetch-depth: 0
+         ref: ${{ matrix.branch }}
+      - name: Checkout php-build-scripts commit
+        if: ${{ github.event.inputs.commithash != 'none' }}
+        run: |
+          cd php-build-scripts
+          git checkout "${{ github.event.inputs.commithash }}"
+      - name: install module
+        run: |
+          sudo apt update > /dev/null
+          sudo apt install -y p7zip re2c libtool libtool-bin zlib1g-dev libcurl4-openssl-dev libxml2-dev libyaml-dev libgmp-dev libzip-dev libssl-dev > /dev/null
+      - name: making aarch64 php
+        run: |
+          cd php-build-scripts
+          ./compile.sh -t android-aarch64 -x -j2 -f ${{ matrix.option }}
+      - name: copy php
+        run: cp ./php-build-scripts/bin/php7/bin/php "php${{ matrix.name }}"
+      - uses: actions/upload-artifact@v1
+        with:
+          name: "php${{ matrix.name }}"
+          path: "./php${{ matrix.name }}"
+      - name: copy php.ini
+        if: ${{ matrix.upload-php-ini == 'yes'}}
+        run: cp ./php-build-scripts/bin/php7/bin/php.ini ./php.ini
+      - uses: actions/upload-artifact@v1
+        if: ${{ matrix.upload-php-ini == 'yes'}}
+        with:
+          name: php.ini
+          path: "./php.ini"
+  commit-php:
+    name: release
+    needs: build-php
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.createRelease == 'yes'}}
+    steps:
+      - name: Download a Build Artifact(php-gd)
+        uses: actions/download-artifact@v2
+        with:
+          name: php-gd
+
+      - name: Download a Build Artifact(php-gd-modified)
+        uses: actions/download-artifact@v2
+        with:
+          name: php-gd-modified
+
+      - name: Download a Build Artifact(php.ini)
+        uses: actions/download-artifact@v2
+        with:
+          name: php.ini
+
+      - name: file compressions
+        run: |
+          zip -9 zip-php-gd php-gd
+          zip -9 zip-php-gd-modified php-gd-modified
+      - name: create checksums.sha256
+        run: |
+          sha256sum "php-gd"  "php-gd-modified" "zip-php-gd.zip" "zip-php-gd-modified.zip" "php.ini" > checksums.sha256
+          cat checksums.sha256
+      - name: Create Release
+        uses: softprops/action-gh-release@v0.1.13
+        with:
+          tag_name: pm3-${{ github.event.inputs.tagname }}
+          name: Release pm3-${{ github.event.inputs.tagname }}
+          files: |
+            php-gd
+            php-gd-modified
+            zip-php-gd.zip
+            zip-php-gd-modified.zip
+            php.ini
+            checksums.sha256
+          body: "The php version for this release is ${{ github.event.inputs.tagname }}.
+
+The download is available from the Assets dropdown.
+
+#### Notes
+
+This binary does not support jit.
+
+This binary is for ARMv8 (aarch64, 64bit).
+
+It does not work on arm (32bit)."

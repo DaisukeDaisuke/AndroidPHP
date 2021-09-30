@@ -4,7 +4,7 @@ on:
       tagname:
         description: 'tagname'
         required: true
-        default: '8.0.11-pm3'
+        default: '8.0.11'
       commithash:
         description: 'commit hash'
         required: true
@@ -14,7 +14,7 @@ on:
         required: true
         default: 'yes'
 
-name: Release Binaries pmmp 3
+name: Release Binaries pmmp 4
 
 jobs:
   build-php:
@@ -22,17 +22,17 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
           include:
             - option: "-g"
               name: "-gd"
-              branch: "stable"
+              branch: "master"
               upload-php-ini: "yes"
               musl-cross-make-repo: "ScerIO/musl-cross-make"
             - option: "-g"
               name: "-gd-modified"
-              branch: "stable"
+              branch: "master"
               upload-php-ini: "no"
               musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
 
@@ -112,9 +112,9 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.13
         with:
-          tag_name: pm3-${{ github.event.inputs.tagname }}
-          name: Release pm3-${{ github.event.inputs.tagname }}
-          draft: true
+          tag_name: pm4-${{ github.event.inputs.tagname }}
+          name: Release pm4-${{ github.event.inputs.tagname }}
+          prerelease: true
           files: |
             php-gd
             php-gd-modified
