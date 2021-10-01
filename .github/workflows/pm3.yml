@@ -38,12 +38,12 @@ jobs:
             - option: "-g"
               name: "-gd-no-modification"
               branch: "stable"
-              upload-php-ini: "yes"
+              upload-php-ini: ""
               musl-cross-make-repo: "ScerIO/musl-cross-make"
             - option: "-g"
               name: "-pm4-gd"
               branch: "master"
-              upload-php-ini: "no"
+              upload-php-ini: "-pm4"
               musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
 
     steps:
@@ -82,13 +82,13 @@ jobs:
           name: "php${{ matrix.name }}"
           path: "./php${{ matrix.name }}"
       - name: copy php.ini
-        if: ${{ matrix.upload-php-ini == 'yes'}}
-        run: cp ./php-build-scripts/bin/php7/bin/php.ini ./php.ini
+        if: ${{ matrix.upload-php-ini != 'no'}}
+        run: cp ./php-build-scripts/bin/php7/bin/php.ini ./php${{ matrix.upload-php-ini }}.ini
       - uses: actions/upload-artifact@v1
-        if: ${{ matrix.upload-php-ini == 'yes'}}
+        if: ${{ matrix.upload-php-ini != 'no'}}
         with:
-          name: php.ini
-          path: "./php.ini"
+          name: php${{ matrix.upload-php-ini }}.ini
+          path: "./php${{ matrix.upload-php-ini }}.ini"
   commit-php:
     name: release
     needs: build-php
@@ -119,6 +119,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: php.ini
+      - name: Download a Build Artifact(php.ini)
+        uses: actions/download-artifact@v2
+        with:
+          name: php-pm4.ini
 
       - name: file compressions
         run: |
@@ -128,7 +132,7 @@ jobs:
           zip -9 zip-php-pm4-gd php-pm4-gd
       - name: create checksums.sha256
         run: |
-          sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "php.ini" > checksums.sha256
+          sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "php.ini" "php-pm4.ini" > checksums.sha256
           cat checksums.sha256
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.13
@@ -145,6 +149,7 @@ jobs:
             zip-php-gd-no-modification.zip
             zip-php-pm4-gd.zip
             php.ini
+            php-pm4.ini
             checksums.sha256
           body: "The php version for this release is ${{ github.event.inputs.tagname }}.
 
