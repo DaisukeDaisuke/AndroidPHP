@@ -40,6 +40,11 @@ jobs:
               branch: "stable"
               upload-php-ini: "yes"
               musl-cross-make-repo: "ScerIO/musl-cross-make"
+            - option: "-g"
+              name: "-pm4-gd"
+              branch: "master"
+              upload-php-ini: "no"
+              musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
 
     steps:
       - name: fetch aarch64-linux-musl from github release
@@ -105,6 +110,11 @@ jobs:
         with:
           name: php-gd-no-modification
 
+      - name: Download a Build Artifact(php-pm4-gd)
+        uses: actions/download-artifact@v2
+        with:
+          name: php-pm4-gd
+
       - name: Download a Build Artifact(php.ini)
         uses: actions/download-artifact@v2
         with:
@@ -115,9 +125,10 @@ jobs:
           zip -9 zip-php php
           zip -9 zip-php-gd php-gd
           zip -9 zip-php-gd-no-modification php-gd-no-modification
+          zip -9 zip-php-pm4-gd php-pm4-gd
       - name: create checksums.sha256
         run: |
-          sha256sum "php" "php-gd" "php-gd-no-modification" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "php.ini" > checksums.sha256
+          sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "php.ini" > checksums.sha256
           cat checksums.sha256
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.13
@@ -128,9 +139,11 @@ jobs:
             php
             php-gd
             php-gd-no-modification
+            php-pm4-gd.zip
             zip-php.zip
             zip-php-gd.zip
             zip-php-gd-no-modification.zip
+            zip-php-pm4-gd.zip
             php.ini
             checksums.sha256
           body: "The php version for this release is ${{ github.event.inputs.tagname }}.
