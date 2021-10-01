@@ -139,7 +139,7 @@ jobs:
             php
             php-gd
             php-gd-no-modification
-            php-pm4-gd.zip
+            php-pm4-gd
             zip-php.zip
             zip-php-gd.zip
             zip-php-gd-no-modification.zip
