@@ -80,15 +80,14 @@ pm3-zip
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php.zip
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/zip-php-gd.zip
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/zip-php-gd-no-modification.zip
-
+php.ini
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4.ini
 pm4
-https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd
-https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd-no-modification
 pm4-zip
-https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4.zip
 https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd.zip
-https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php-pm4-gd-no-modification.zip
+php.ini
+https://github.com/DaisukeDaisuke/AndroidPHP/releases/latest/download/php.ini
 ```
 </details>
 
