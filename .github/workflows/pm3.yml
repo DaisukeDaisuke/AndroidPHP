@@ -161,4 +161,7 @@ This binary does not support jit.
 
 This binary is for ARMv8 (aarch64, 64bit).
 
-It does not work on arm (32bit)."
+It does not work on arm (32bit).
+
+Please note that the only pmmp4 binaries are `php-pm4-gd` and `zip-php-pm4-gd.zip`, the other binaries are for pm3.
+"
