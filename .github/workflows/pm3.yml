@@ -48,42 +48,47 @@ jobs:
 
     steps:
       - name: fetch aarch64-linux-musl from github release
-        run: |
-          mkdir aarch64-linux-musl
-          cd aarch64-linux-musl
-          wget -q -O "aarch64-linux-musl.tar.xz" "https://github.com/${{ matrix.musl-cross-make-repo }}/releases/latest/download/aarch64-linux-musl.tar.xz"
+        working-directory: aarch64-linux-musl
+        run: wget -q -O "aarch64-linux-musl.tar.xz" "https://github.com/${{ matrix.musl-cross-make-repo }}/releases/latest/download/aarch64-linux-musl.tar.xz"
+        
       - name: unzip aarch64-linux-musl and append path
+        working-directory: aarch64-linux-musl
         run: |
-          cd aarch64-linux-musl
           tar Jxfv aarch64-linux-musl.tar.xz > /dev/null
           echo "$(pwd)/bin" >> $GITHUB_PATH
+          
       - uses: actions/checkout@v2
         with:
          repository: pmmp/php-build-scripts
          path: php-build-scripts
          ref: ${{ matrix.branch }}
+         
       - name: Checkout php-build-scripts commit
         if: ${{ github.event.inputs.commithash != 'none' }}
-        run: |
-          cd php-build-scripts
-          git checkout "${{ github.event.inputs.commithash }}"
+        working-directory: php-build-scripts
+        run: git checkout "${{ github.event.inputs.commithash }}"
+        
       - name: install module
         run: |
           sudo apt update &> /dev/null
           sudo apt install -y re2c libtool libtool-bin zlib1g-dev libcurl4-openssl-dev libxml2-dev libyaml-dev libgmp-dev libzip-dev libssl-dev &> /dev/null
+          
       - name: making aarch64 php
-        run: |
-          cd php-build-scripts
-          ./compile.sh -t android-aarch64 -x -j2 -f ${{ matrix.option }}
+        working-directory: php-build-scripts
+        run: ./compile.sh -t android-aarch64 -x -j2 -f ${{ matrix.option }}
+        
       - name: copy php
         run: cp ./php-build-scripts/bin/php7/bin/php "php${{ matrix.name }}"
+        
       - uses: actions/upload-artifact@v1
         with:
           name: "php${{ matrix.name }}"
           path: "./php${{ matrix.name }}"
+          
       - name: copy php.ini
         if: ${{ matrix.upload-php-ini != 'no'}}
         run: cp ./php-build-scripts/bin/php7/bin/php.ini ./php${{ matrix.upload-php-ini }}.ini
+        
       - uses: actions/upload-artifact@v1
         if: ${{ matrix.upload-php-ini != 'no'}}
         with:
@@ -130,10 +135,12 @@ jobs:
           zip -9 zip-php-gd php-gd
           zip -9 zip-php-gd-no-modification php-gd-no-modification
           zip -9 zip-php-pm4-gd php-pm4-gd
+          
       - name: create checksums.sha256
         run: |
           sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "php.ini" "php-pm4.ini" > checksums.sha256
           cat checksums.sha256
+          
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.13
         with:
