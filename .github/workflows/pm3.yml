@@ -183,9 +183,5 @@ This binary is for ARMv8 (aarch64, 64bit).
 
 It does not work on arm (32bit).
 
-Please note that the only pmmp4 binaries are `php-pm4-gd` and `zip-php-pm4-gd.zip`, the other binaries are for pm3.
-
-androidPHP will discontinue the distribution of pm3 binaries by April 2022.
-
-Please use the `php-pm4-` binary whenever possible.
+Currently, all binaries are compatible with pmmp4, and the php or php-gd binaries are recommended.
 "
