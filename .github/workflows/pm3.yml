@@ -187,5 +187,5 @@ Please note that the only pmmp4 binaries are `php-pm4-gd` and `zip-php-pm4-gd.zi
 
 androidPHP will discontinue the distribution of pm3 binaries by April 2022.
 
-Please use the "php-pm4-" binary whenever possible.
+Please use the `php-pm4-` binary whenever possible.
 "
