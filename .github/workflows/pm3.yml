@@ -45,13 +45,9 @@ jobs:
               branch: "master"
               upload-php-ini: "-pm4"
               musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
-            - option: "-g"
-              name: "-pm4-gd-no-modification"
-              branch: "master"
-              upload-php-ini: "no"
-              musl-cross-make-repo: "ScerIO/musl-cross-make"
 
     steps:
+      - uses: actions/checkout@v2
       - name: fetch aarch64-linux-musl from github release
         working-directory: aarch64-linux-musl
         run: wget -q -O "aarch64-linux-musl.tar.xz" "https://github.com/${{ matrix.musl-cross-make-repo }}/releases/latest/download/aarch64-linux-musl.tar.xz"
@@ -124,11 +120,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: php-pm4-gd
-      
-      - name: Download a Build Artifact(php-pm4-gd-no-modification)
-        uses: actions/download-artifact@v2
-        with:
-          name: php-pm4-gd-no-modification
 
       - name: Download a Build Artifact(php.ini)
         uses: actions/download-artifact@v2
@@ -149,7 +140,7 @@ jobs:
           
       - name: create checksums.sha256
         run: |
-          sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "php-pm4-gd-no-modification" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "zip-php-pm4-gd-no-modification.zip" "php.ini" "php-pm4.ini" > checksums.sha256
+          sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "php.ini" "php-pm4.ini" > checksums.sha256
           cat checksums.sha256
           
       - name: Create Release
@@ -162,12 +153,10 @@ jobs:
             php-gd
             php-gd-no-modification
             php-pm4-gd
-            php-pm4-gd-no-modification
             zip-php.zip
             zip-php-gd.zip
             zip-php-gd-no-modification.zip
             zip-php-pm4-gd.zip
-            zip-php-pm4-gd-no-modification.zip
             php.ini
             php-pm4.ini
             checksums.sha256
