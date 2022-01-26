@@ -137,7 +137,6 @@ jobs:
           zip -9 zip-php-gd php-gd
           zip -9 zip-php-gd-no-modification php-gd-no-modification
           zip -9 zip-php-pm4-gd php-pm4-gd
-          zip -9 zip-php-pm4-gd-no-modification php-pm4-gd-no-modification
           
       - name: create checksums.sha256
         run: |
