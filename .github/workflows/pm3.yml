@@ -172,5 +172,7 @@ This binary is for ARMv8 (aarch64, 64bit).
 
 It does not work on arm (32bit).
 
-Currently, all binaries are compatible with pmmp4, and the php or php-gd binaries are recommended.
+All binaries are not compatible with pmmp3 and are for pmmp4.
+
+the php or php-gd binaries are recommended.
 "
