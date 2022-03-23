@@ -143,6 +143,11 @@ jobs:
           sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "php.ini" "php-pm4.ini" > checksums.sha256
           cat checksums.sha256
           
+      - uses: actions/upload-artifact@v1
+        with:
+          name: "checksums.sha256"
+          path: "./checksums.sha256"
+          
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
