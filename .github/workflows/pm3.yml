@@ -45,7 +45,7 @@ jobs:
               branch: "php/8.1"
               upload-php-ini: "-next-major"
               musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
-
+            # Please note that if editing the matrix, the release workflow must also be edited.
     steps:
       - name: init directories
         run: mkdir -p aarch64-linux-musl
@@ -117,16 +117,16 @@ jobs:
         with:
           name: php-gd-no-modification
 
-      - name: Download a Build Artifact(php-pm4-gd)
+      - name: Download a Build Artifact(php-next-major-gd)
         uses: actions/download-artifact@v2
         with:
-          name: php-pm4-gd
+          name: php-next-major-gd
 
       - name: Download a Build Artifact(php.ini)
         uses: actions/download-artifact@v2
         with:
           name: php.ini
-      - name: Download a Build Artifact(php-pm4.ini)
+      - name: Download a Build Artifact(php-next-major.ini)
         uses: actions/download-artifact@v2
         with:
           name: php-pm4.ini
@@ -136,11 +136,11 @@ jobs:
           zip -9 zip-php php
           zip -9 zip-php-gd php-gd
           zip -9 zip-php-gd-no-modification php-gd-no-modification
-          zip -9 zip-php-pm4-gd php-pm4-gd
+          zip -9 zip-php-next-major-gd php-next-major-gd
           
       - name: create checksums.sha256
         run: |
-          sha256sum "php" "php-gd" "php-gd-no-modification" "php-pm4-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-pm4-gd.zip" "php.ini" "php-pm4.ini" > checksums.sha256
+          sha256sum "php" "php-gd" "php-gd-no-modification" "php-next-major-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-next-major-gd.zip" "php.ini" "php-next-major.ini" > checksums.sha256
           cat checksums.sha256
           
       - uses: actions/upload-artifact@v1
@@ -157,13 +157,13 @@ jobs:
             php
             php-gd
             php-gd-no-modification
-            php-pm4-gd
+            php-next-major-gd
             zip-php.zip
             zip-php-gd.zip
             zip-php-gd-no-modification.zip
-            zip-php-pm4-gd.zip
+            zip-php-next-major-gd.zip
             php.ini
-            php-pm4.ini
+            php-next-major.ini
             checksums.sha256
           body: "The php version for this release is ${{ github.event.inputs.tagname }}.
 
@@ -180,4 +180,6 @@ It does not work on arm (32bit).
 All binaries are not compatible with pmmp3 and are for pmmp4.
 
 the php or php-gd binaries are recommended.
+
+The php version of php-next-major-gd is 8.1..
 "
