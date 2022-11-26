@@ -41,9 +41,9 @@ jobs:
               upload-php-ini: ""
               musl-cross-make-repo: "ScerIO/musl-cross-make"
             - option: "-g"
-              name: "-pm4-gd"
-              branch: "master"
-              upload-php-ini: "-pm4"
+              name: "next-major-gd"
+              branch: "php/8.1"
+              upload-php-ini: "-next-major"
               musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
 
     steps:
