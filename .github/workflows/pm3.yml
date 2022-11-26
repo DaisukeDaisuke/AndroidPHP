@@ -129,7 +129,7 @@ jobs:
       - name: Download a Build Artifact(php-next-major.ini)
         uses: actions/download-artifact@v2
         with:
-          name: php-pm4.ini
+          name: php-next-major.ini
 
       - name: file compressions
         run: |
