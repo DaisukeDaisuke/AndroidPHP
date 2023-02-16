@@ -48,7 +48,7 @@ jobs:
             - option: "-g"
               name: "-experimental-gd"
               branch: "php/8.2"
-              upload-php-ini: ""
+              upload-php-ini: "-experimental-gd"
               musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
             # Please note that if editing the matrix, the release workflow must also be edited.
     steps:
