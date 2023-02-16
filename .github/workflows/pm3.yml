@@ -48,7 +48,7 @@ jobs:
             - option: "-g"
               name: "-experimental-gd"
               branch: "php/8.2"
-              upload-php-ini: "-experimental-gd"
+              upload-php-ini: ""
               musl-cross-make-repo: "DaisukeDaisuke/musl-cross-make"
             # Please note that if editing the matrix, the release workflow must also be edited.
     steps:
@@ -156,7 +156,7 @@ jobs:
           
       - name: create checksums.sha256
         run: |
-          sha256sum "php" "php-gd" "php-gd-no-modification" "php-next-major-gd" "php-experimental-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-next-major-gd.zip" "zip-php-experimental-gd.zip" "php.ini" "php-next-major.ini" > checksums.sha256
+          sha256sum "php" "php-gd" "php-gd-no-modification" "php-next-major-gd" "php-experimental-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-next-major-gd.zip" "zip-php-experimental-gd.zip" "php.ini" "php-next-major.ini" "php-experimental-gd.ini" > checksums.sha256
           cat checksums.sha256
           
       - uses: actions/upload-artifact@v1
