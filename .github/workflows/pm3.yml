@@ -156,7 +156,7 @@ jobs:
           
       - name: create checksums.sha256
         run: |
-          sha256sum "php" "php-gd" "php-gd-no-modification" "php-next-major-gd" "php-experimental-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-next-major-gd.zip" "php-experimental-gd.zip" "php.ini" "php-next-major.ini" > checksums.sha256
+          sha256sum "php" "php-gd" "php-gd-no-modification" "php-next-major-gd" "php-experimental-gd" "zip-php.zip" "zip-php-gd.zip" "zip-php-gd-no-modification.zip" "zip-php-next-major-gd.zip" "zip-php-experimental-gd.zip" "php.ini" "php-next-major.ini" > checksums.sha256
           cat checksums.sha256
           
       - uses: actions/upload-artifact@v1
@@ -179,7 +179,7 @@ jobs:
             zip-php-gd.zip
             zip-php-gd-no-modification.zip
             zip-php-next-major-gd.zip
-            php-experimental-gd.zip
+            zip-php-experimental-gd.zip
             php.ini
             php-next-major.ini
             php-experimental-gd.ini
