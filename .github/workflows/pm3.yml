@@ -40,7 +40,7 @@ jobs:
               branch: "php/8.0"
               upload-php-ini: ""
               musl-cross-make-repo: "ScerIO/musl-cross-make"
-            - option: "-g"
+            - option: "-g -P 5"
               name: "-next-major-gd"
               branch: "php/8.1"
               upload-php-ini: "-next-major"
