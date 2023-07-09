@@ -82,7 +82,7 @@ jobs:
           
       - name: making aarch64 php
         working-directory: php-build-scripts
-        run: ./compile.sh -t android-aarch64 -x -j2 -f ${{ matrix.option }}
+        run: ./compile.sh -t android-aarch64 -x -j2 ${{ matrix.option }}
         
       - name: copy php
         run: cp ./php-build-scripts/bin/php7/bin/php "php${{ matrix.name }}"
