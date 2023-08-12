@@ -73,8 +73,12 @@ jobs:
       - name: Checkout php-build-scripts commit
         if: ${{ github.event.inputs.commithash != 'none' }}
         working-directory: php-build-scripts
-        run: git checkout "${{ github.event.inputs.commithash }}"
-        
+        run: git checkout ${{ github.event.inputs.commithash }}
+
+      - name: patch compile.sh
+        working-directory: php-build-scripts
+        run: sed -i=".backup" 's/LIBZIP_VERSION=".*"/LIBZIP_VERSION="1.9.2"/' ./compile.sh
+
       - name: install module
         run: |
           sudo apt update &> /dev/null
